@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+
+// Ангиллын жагсаалт (давхардалгүй)
+const categories = [...new Set(posts.map((p) => p.data.category).filter(Boolean))];
+
+// Таг-ын жагсаалт (давхардалгүй, бүгдийг нь нэгтгэнэ)
+const tags = [...new Set(posts.flatMap((p) => p.data.tags || []))];
+---
+
+<aside class="space-y-8 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+    
+    <!-- Ангиллууд -->
+    <section>
+        <h3 class="font-bold text-slate-900 mb-4 uppercase text-xs tracking-widest">Ангилал</h3>
+        <ul class="space-y-2">
+            {categories.map((cat) => (
+                <li>
+                    <a href={`/blog/category/${cat}`} class="text-slate-600 hover:text-blue-600 transition flex justify-between">
+                        {cat}
+                        <span class="text-slate-400 text-sm">({posts.filter(p => p.data.category === cat).length})</span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </section>
+
+    <!-- Тагууд -->
+    <section>
+        <h3 class="font-bold text-slate-900 mb-4 uppercase text-xs tracking-widest">Шошго (Tags)</h3>
+        <div class="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+                <a href={`/blog/tags/${tag}`} class="bg-white border border-slate-200 px-3 py-1 rounded-full text-xs text-slate-600 hover:bg-blue-50 hover:border-blue-300 transition">
+                    #{tag}
+                </a>
+            ))}
+        </div>
+    </section>
+</aside>

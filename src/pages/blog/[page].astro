@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+export async function getStaticPaths({ paginate }: any) {
+  const allPosts = await getCollection('blog');
+  const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  return paginate(sortedPosts, { pageSize: 6 });
+}
+
+const { page } = Astro.props as { page: any };
+---
+
+<html lang="mn">
+	<head>
+		<BaseHead title="Бүх нийтлэлүүд - Бурзай-Зар" description="Манай блогын бүх нийтлэлүүд" />
+	</head>
+
+	<body class="bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col">
+		<Header />
+
+		<main class="w-full max-w-[960px] mx-auto px-4 py-12 flex-grow">
+			<h1 class="text-4xl font-bold mb-10 text-center">Блог нийтлэлүүд</h1>
+
+			<!-- Нийтлэлийн сүлжээ -->
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{page.data.map((post: any) => {
+					const cleanId = post.id.replace(/\.(md|mdx)$/, '');
+					const imageSrc = typeof post.data.heroImage === 'object' && post.data.heroImage !== null 
+						? post.data.heroImage.src 
+						: post.data.heroImage;
+
+					return (
+						<a href={`/blog/${cleanId}/`} class="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-lg transition-all">
+							<div class="w-full h-40 bg-slate-100">
+								{imageSrc && <img src={imageSrc} alt="" class="w-full h-full object-cover" />}
+							</div>
+							<div class="p-5">
+								<h2 class="font-bold text-lg mb-2 group-hover:text-blue-600 line-clamp-2">{post.data.title}</h2>
+								<div class="text-xs text-slate-500"><FormattedDate date={post.data.pubDate} /></div>
+							</div>
+						</a>
+					);
+				})}
+			</div>
+
+			<!-- Pagination Controls -->
+			<div class="flex justify-center items-center gap-4 mt-16">
+				{page.url.prev && (
+					<a href={page.url.prev} class="px-4 py-2 bg-white border border-slate-200 rounded-lg hover:border-blue-600 hover:text-blue-600 transition">
+						← Өмнөх
+					</a>
+				)}
+				
+				<span class="text-sm font-medium">Хуудас {page.currentPage} / {page.lastPage}</span>
+
+				{page.url.next && (
+					<a href={page.url.next} class="px-4 py-2 bg-white border border-slate-200 rounded-lg hover:border-blue-600 hover:text-blue-600 transition">
+						Дараах →
+					</a>
+				)}
+			</div>
+		</main>
+
+		<Footer />
+	</body>
+</html>
