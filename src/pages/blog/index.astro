@@ -5,88 +5,44 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 
-export async function getStaticPaths({ paginate }: any) {
-  const allPosts = await getCollection('blog');
-  const validPosts = allPosts.filter((post: any) => post && post.data && post.data.pubDate);
-
-  const sortedPosts = validPosts.sort((a: any, b: any) => {
-    return new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf();
-  });
-
-  return paginate(sortedPosts, { pageSize: 6 });
-}
-
-const { page } = Astro.props as { page: any };
-
-// Хэрэв page нь ямар нэгэн байдлаар undefined ирвэл /blog/1 рүү шууд шилжүүлнэ
-if (!page) {
-  return Astro.redirect('/blog/1');
-}
+const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf());
+const recentPosts = sortedPosts.slice(0, 6); // Эхний 6 нийтлэл
 ---
-
 <html lang="mn">
-	<head>
-		<BaseHead title="Блог нийтлэлүүд - Бурзай-Зар" description="Бурзай-зар сайтын зөвлөгөө, мэдээ мэдээлэл" />
-	</head>
+    <head>
+        <BaseHead title="Блог нийтлэлүүд - Бурзай-Зар" description="Бурзай-зар сайтын зөвлөгөө, мэдээ мэдээлэл" />
+    </head>
+    <body class="bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col">
+        <Header />
+        <main class="w-full max-w-[960px] mx-auto px-4 py-12 flex-grow">
+            <h1 class="text-4xl font-bold mb-10 text-center">Блог нийтлэлүүд</h1>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {recentPosts.map((post: any) => {
+                    const cleanId = post.id.replace(/\.(md|mdx)$/, '');
+                    const imageSrc = post.data.heroImage?.src || post.data.heroImage;
+                    return (
+                        <a href={`/blog/${cleanId}/`} class="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col">
+                            <div class="w-full h-40 bg-slate-100 overflow-hidden">
+                                {imageSrc && <img src={imageSrc} alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />}
+                            </div>
+                            <div class="p-5 flex flex-col grow">
+                                <h2 class="font-bold text-lg mb-2 group-hover:text-blue-600 line-clamp-2">{post.data.title}</h2>
+                                <div class="text-xs text-slate-500 mt-auto"><FormattedDate date={post.data.pubDate} /></div>
+                            </div>
+                        </a>
+                    );
+                })}
+            </div>
 
-	<body class="bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col">
-		<Header />
-
-		<main class="w-full max-w-[720px] mx-auto px-4 py-12 flex-grow">
-			<h1 class="text-4xl font-bold mb-10 text-center">Блог нийтлэлүүд</h1>
-
-			<!-- Нийтлэлийн сүлжээ (Grid) -->
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-				{page.data.map((post: any) => {
-					const cleanId = post.id.replace(/\.(md|mdx)$/, '');
-					const imageSrc = typeof post.data.heroImage === 'object' && post.data.heroImage !== null 
-						? post.data.heroImage.src 
-						: post.data.heroImage;
-
-					return (
-						<a href={`/blog/${cleanId}/`} class="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col">
-							<div class="w-full h-40 bg-slate-100 overflow-hidden">
-								{imageSrc ? (
-									<img src={imageSrc} alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-								) : (
-									<div class="w-full h-full flex items-center justify-center text-slate-400 text-sm">Зураггүй</div>
-								)}
-							</div>
-							<div class="p-5 flex flex-col grow">
-								<h2 class="font-bold text-lg mb-2 group-hover:text-blue-600 line-clamp-2">{post.data.title}</h2>
-								<div class="text-xs text-slate-500 mt-auto"><FormattedDate date={post.data.pubDate} /></div>
-							</div>
-						</a>
-					);
-				})}
-			</div>
-
-			<!-- Pagination Controls (Хуудас солих товчнууд) -->
-			<div class="flex justify-center items-center gap-4 mt-16">
-				{page.url.prev ? (
-					<a href={page.url.prev} class="px-4 py-2 bg-white border border-slate-200 rounded-lg hover:border-blue-600 hover:text-blue-600 transition shadow-sm">
-						← Өмнөх
-					</a>
-				) : (
-					<span class="px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-not-allowed">
-						← Өмнөх
-					</span>
-				)}
-				
-				<span class="text-sm font-medium">Хуудас {page.currentPage} / {page.lastPage}</span>
-
-				{page.url.next ? (
-					<a href={page.url.next} class="px-4 py-2 bg-white border border-slate-200 rounded-lg hover:border-blue-600 hover:text-blue-600 transition shadow-sm">
-						Дараах →
-					</a>
-				) : (
-					<span class="px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-not-allowed">
-						Дараах →
-					</span>
-				)}
-			</div>
-		</main>
-
-		<Footer />
-	</body>
+            <!-- Дараагийн хуудас руу орох товч -->
+            <div class="flex justify-center items-center gap-4 mt-16">
+                <span class="px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-slate-400 cursor-not-allowed">← Өмнөх</span>
+                <span class="text-sm font-medium">Хуудас 1 / {Math.ceil(sortedPosts.length / 6)}</span>
+                <a href="/blog/2" class="px-4 py-2 bg-white border border-slate-200 rounded-lg hover:border-blue-600 hover:text-blue-600 transition shadow-sm">Дараах →</a>
+            </div>
+        </main>
+        <Footer />
+    </body>
 </html>
