@@ -1,0 +1,57 @@
+---
+// src/components/FloatingBanner.astro
+---
+
+<div id="floating-banner" class="fixed bottom-0 left-0 right-0 z-50 p-3 sm:hidden transition-transform duration-300 translate-y-full">
+    <div class="bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-800 flex items-center justify-between gap-3 relative">
+        
+        <!-- Хаах товч (X) -->
+        <button 
+            id="close-banner" 
+            class="absolute -top-2 -right-2 bg-slate-700 text-slate-300 hover:text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-md"
+            aria-label="Хаах"
+        >
+            ✕
+        </button>
+
+        <!-- Текст болон линк -->
+        <div class="flex-1">
+            <h4 class="text-sm font-bold text-white">Бараагаа зарж борлуулмаар байна уу?</h4>
+            <p class="text-xs text-slate-300 mt-0.5">Бурзай-Зар дээр үнэгүй байршуулаарай.</p>
+        </div>
+
+        <a 
+            href="https://burzai-zar.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow whitespace-nowrap transition"
+        >
+            Орох
+        </a>
+    </div>
+</div>
+
+<script>
+    // Хэрэглэгч гар утсаар хуудсыг бага зэрэг доош гүйлгэхэд баннер гарч ирэх логик
+    const banner = document.getElementById('floating-banner');
+    const closeBtn = document.getElementById('close-banner');
+
+    if (banner && closeBtn) {
+        // Хуудсыг 300px-ээс дээш гүйлгэхэд гарч ирнэ
+        window.addEventListener('scroll', () => {
+            // Хэрэв хэрэглэгч өмнө нь хаачихсан бол дахин гарч ирүүлэхгүй байх sessionStorage шалгалт
+            if (sessionStorage.getItem('bannerClosed') === 'true') return;
+
+            if (window.scrollY > 300) {
+                banner.classList.remove('translate-y-full');
+            }
+        });
+
+        // Хаах товч дарахад алга болох
+        closeBtn.addEventListener('click', () => {
+            banner.classList.add('translate-y-full');
+            // Тухайн сесс (хэсэг хугацаанд) дахин харуулахгүй байх санах ой
+            sessionStorage.setItem('bannerClosed', 'true');
+        });
+    }
+</script>

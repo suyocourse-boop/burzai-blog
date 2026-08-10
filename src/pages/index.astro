@@ -11,6 +11,9 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+// Энд .slice(0, 3) гэж бичсэнээр хамгийн эхний 3 нийтлэл л гарч ирнэ
+// Хэрэв 6 ширхэгийг гаргахыг хүсвэл .slice(0, 6) болгоно
+const latestPosts = posts.slice(0, 6);
 
 // Хамгийн сүүлийн 1 нийтлэлийг онцлох (Hero post) болгож авах, үлдсэнийг нь жагсаалтад оруулах
 const featuredPost = posts[0];
@@ -81,13 +84,13 @@ const recentPosts = posts.slice(1);
                     )}
 
                     <!-- 2. Бусад сүүлийн нийтлэлүүдийн жагсаалт -->
-                    {recentPosts.length > 0 && (
+                    {latestPosts.length > 0 && (
                         <div>
                             <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-blue-600"></span> Шинэ нийтлэлүүд
                             </h2>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                {recentPosts.map((post) => {
+                                {latestPosts.map((post) => {
                                     const cleanId = post.id.replace(/\.(md|mdx)$/, '');
                                     const imageSrc = typeof post.data.heroImage === 'object' && post.data.heroImage !== null 
                                         ? post.data.heroImage.src 

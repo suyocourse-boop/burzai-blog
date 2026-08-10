@@ -7,7 +7,8 @@ import FormattedDate from '../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Sidebar from '../components/Sidebar.astro';
-
+import CallToActionBanner from '../components/CallToActionBanner.astro'
+import FloatingBanner from '../components/FloatingBanner.astro'
 // Props-оор ирж буй нийтлэлийн өгөгдөл (мөн Astro.url-ээс slug-ийг автоматаар салгаж авна)
 const props = Astro.props;
 const { title, description, pubDate, updatedDate, heroImage, tags, headings, readingTime } = props;
@@ -118,9 +119,9 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
                 </div>
                 <h1 class="text-4xl font-bold tracking-tight text-slate-900 leading-tight mb-2">{title}</h1>
                 
-                <!-- <div class="text-sm font-semibold text-blue-600 uppercase mb-2">
+                <div class="text-sm font-semibold text-blue-600 uppercase mb-2">
                     <a href={`/blog/category/${Astro.props.category}`}>
-                        {Astro.props.category}
+                       【{Astro.props.category}】
                     </a>
                 </div>
                 
@@ -130,7 +131,7 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
                       #{tag}
                     </a>
                   ))}
-                </div> -->
+                </div>
             </div>
 
 			{headings && headings.length > 0 && (
@@ -157,9 +158,21 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 )}
 
             <!-- Нийтлэлийн үндсэн контент (Markdown) -->
-            <div class="space-y-6 text-lg leading-relaxed text-slate-700 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-slate-900 [&>h2]:mt-8 [&>h2]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-slate-900 [&>h3]:mt-6 [&>h3]:mb-3 [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:space-y-2 [&>blockquote]:border-l-4 [&>blockquote]:border-blue-600 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-slate-600">
+            <!-- <div class="space-y-6 text-lg leading-relaxed text-slate-700 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-slate-900 [&>h2]:mt-8 [&>h2]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-slate-900 [&>h3]:mt-6 [&>h3]:mb-3 [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:space-y-2 [&>blockquote]:border-l-4 [&>blockquote]:border-blue-600 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-slate-600">
                 <slot />
-            </div>
+            </div> -->
+			<!-- Нийтлэлийн үндсэн контент (Markdown) -->
+			<div class="space-y-6 text-base md:text-lg leading-relaxed text-slate-700 
+				[&>h2]:text-xl md:[&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-slate-900 [&>h2]:mt-8 [&>h2]:mb-4 
+				[&>h3]:text-lg md:[&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-slate-900 [&>h3]:mt-6 [&>h3]:mb-3 
+				[&>p]:mb-4 
+				[&>ul]:list-disc [&>ul]:pl-6 [&>ul]:space-y-2 
+				[&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:space-y-2 
+				[&>blockquote]:border-l-4 [&>blockquote]:border-blue-600 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-slate-600">
+				<slot />
+			</div>
+			<!-- Нийтлэлийн төгсгөлд баннер оруулах -->
+			<CallToActionBanner />
         </article>
 
 		<!-- Сошиал хуваалцах хэсэг -->
@@ -266,5 +279,7 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
     </section>
 )}
 		<Footer />
+		<!-- Гар утасны хөвөгч баннер -->
+        <FloatingBanner />
 	</body>
 </html>
