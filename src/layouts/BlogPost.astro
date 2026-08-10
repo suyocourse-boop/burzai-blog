@@ -10,8 +10,8 @@ import Sidebar from '../components/Sidebar.astro';
 
 // Props-оор ирж буй нийтлэлийн өгөгдөл (мөн Astro.url-ээс slug-ийг автоматаар салгаж авна)
 const props = Astro.props;
-const { title, description, pubDate, updatedDate, heroImage, tags } = props;
-
+const { title, description, pubDate, updatedDate, heroImage, tags,headings, readingTime } = props;
+console.log("Гарчгууд",headings)
 // URL-ээс яг одоогийн нийтлэлийн slug-ийг олж авах (Жишээ нь: /blog/minii-niitlel/ -> minii-niitlel)
 const currentPath = Astro.url.pathname;
 const currentSlug = currentPath.split('/').filter(Boolean).pop();
@@ -30,6 +30,11 @@ const relatedPosts = allPosts.filter((post) => {
     // Одоогийн нийтлэлийн tag-уудаас дор хаяж нэг нь нөгөө нийтлэлтэй давхцаж байгаа эсэх
     return post.data.tags.some((tag: string) => tags.includes(tag));
 }).slice(0, 3); // Хамгийн эхний 3-ыг л авах
+
+// Тухайн одоогийн хуудасны URL-ийг авах
+const currentUrl = Astro.url.href;
+const encodedTitle = encodeURIComponent(title);
+const encodedUrl = encodeURIComponent(currentUrl);
 
 // Энийг нэмээд терминал эсвэл хөтчийн консол дээр юу гарч ирж байгааг хараарай
 console.log("Бүх нийтлэл:", allPosts.length);
@@ -63,16 +68,18 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 		<Header />
 
 		<!-- Нийтлэлийн дээр эсвэл доор буцах товч нэмэх нь -->
-		<div class="max-w-[720px] mx-auto px-4 pt-6">
+		
+		<div class="max-w-[1200px] w-full mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-10">
+    
+
+    <!-- Зүүн талд: Нийтлэлийн үндсэн хэсэг (PC дээр 2 багана эзэлнэ) -->
+    <main class="lg:col-span-2 w-full">
+		<div class="max-w-720px mx-auto mb-4  px-4 pt-6">
 			<a href="/blog" class="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
 				← Буцах
 			</a>
 		</div>
-		<div class="max-w-[1200px] w-full mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-10">
-    
-    <!-- Зүүн талд: Нийтлэлийн үндсэн хэсэг (PC дээр 2 багана эзэлнэ) -->
-    <main class="lg:col-span-2 w-full">
-        <article class="w-full">
+        <article class="w-full" data-pagefind-body>
             <!-- Hero Зураг -->
             {heroImage && (
                 <div class="w-full mb-8">
@@ -89,7 +96,13 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
             <!-- Гарчиг болон огноо -->
             <div class="text-center mb-8 pb-6 border-b border-slate-200">
                 <div class="text-slate-500 mb-2 text-sm">
-                    <FormattedDate date={pubDate} />
+                    <!-- <FormattedDate date={pubDate} /> -->
+					 <!-- Огнооны хажууд эсвэл доор нь харуулах -->
+				<div class="text-slate-500 mb-2 text-sm flex items-center justify-center gap-3">
+					<span><FormattedDate date={pubDate} /></span>
+					<span>•</span>
+					<span>📖 Унших хугацаа: {readingTime || 3} минут</span>
+				</div>
                     {updatedDate && (
                         <div class="italic">
                             Last updated on <FormattedDate date={updatedDate} />
@@ -98,7 +111,7 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
                 </div>
                 <h1 class="text-4xl font-bold tracking-tight text-slate-900 leading-tight mb-2">{title}</h1>
                 
-                <div class="text-sm font-semibold text-blue-600 uppercase mb-2">
+                <!-- <div class="text-sm font-semibold text-blue-600 uppercase mb-2">
                     <a href={`/blog/category/${Astro.props.category}`}>
                         {Astro.props.category}
                     </a>
@@ -110,20 +123,85 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
                       #{tag}
                     </a>
                   ))}
-                </div>
+                </div> -->
             </div>
+
+			{headings && headings.length > 0 && (
+    <nav class="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-8">
+        <h2 class="text-lg font-bold text-slate-900 mb-4">Гарчиг</h2>
+		<!-- Огнооны хажууд эсвэл доор нь харуулах -->
+        <ul class="space-y-2 text-sm">
+            {headings.map((heading) => (
+                <li class={`list-none ${heading.depth === 3 ? 'pl-4' : ''}`}>
+                    <a 
+                        href={`#${heading.slug}`} 
+                        class="text-slate-600 hover:text-blue-600 transition-colors block"
+                    >
+                        {heading.text}
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </nav>
+)}
 
             <!-- Нийтлэлийн үндсэн контент (Markdown) -->
             <div class="space-y-6 text-lg leading-relaxed text-slate-700 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-slate-900 [&>h2]:mt-8 [&>h2]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-slate-900 [&>h3]:mt-6 [&>h3]:mb-3 [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:space-y-2 [&>blockquote]:border-l-4 [&>blockquote]:border-blue-600 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-slate-600">
                 <slot />
             </div>
         </article>
+
+		<!-- Сошиал хуваалцах хэсэг -->
+<div class="mt-12 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
+    <span class="text-sm font-semibold text-slate-700">Энэ нийтлэлийг хуваалцах:</span>
+    
+    <div class="flex items-center gap-3">
+        <!-- Facebook дээр хуваалцах -->
+        <a 
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
+        >
+            Facebook
+        </a>
+
+        <!-- X (Twitter) дээр хуваалцах -->
+        <a 
+            href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="bg-slate-100 text-slate-800 hover:bg-slate-200 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
+        >
+            X (Twitter)
+        </a>
+
+        <!-- LinkedIn дээр хуваалцах -->
+        <a 
+            href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
+        >
+            LinkedIn
+        </a>
+
+        <!-- Линк хуулж авах товч (JavaScript-тэй) -->
+        <button 
+            onclick={`navigator.clipboard.writeText('${currentUrl}'); alert('Линк хуулагдлаа!');`}
+            class="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer"
+        >
+            🔗 Линк хуулах
+        </button>
+    </div>
+</div>
     </main>
 
     <!-- Баруун талд: Sidebar (PC дээр 1 багана эзэлнэ) -->
     <aside class="w-full">
         <div class="sticky top-8">
             <Sidebar />
+			
         </div>
     </aside>
 
@@ -153,7 +231,7 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 
                 return (
                     <a href={postUrl} class="group block h-full">
-                        <div class="w-full h-32 mb-3 bg-slate-100 rounded-lg overflow-hidden">
+                        <div class="w-full max-w-[720px] h-48 mb-3 bg-slate-100 rounded-lg overflow-hidden">
                             {imageSrc ? (
                                 <img 
                                     src={imageSrc} 

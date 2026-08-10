@@ -1,0 +1,30 @@
+---
+// src/components/Search.astro
+---
+
+<div id="search" class="w-full"></div>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-ui.js" is:inline></script>
+
+<script is:inline>
+    window.addEventListener('DOMContentLoaded', () => {
+        new PagefindUI({
+            element: "#search",
+            showSubResults: true,
+            resetStyles: false,
+        });
+    });
+</script>
+
+<style>
+    /* Pagefind дизайн харагдах байдлыг таны сайтын Tailwind загварт тохируулах */
+    .pagefind-ui {
+        --pagefind-ui-scale: 0.9;
+        --pagefind-ui-primary: #2563eb; /* Tailwind blue-600 */
+        --pagefind-ui-text: #334155;    /* Tailwind slate-700 */
+        --pagefind-ui-background: #ffffff;
+        --pagefind-ui-border: #cbd5e1;  /* Tailwind slate-300 */
+        --pagefind-ui-border-radius: 8px;
+    }
+</style>
