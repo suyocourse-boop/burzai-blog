@@ -10,8 +10,8 @@ import Sidebar from '../components/Sidebar.astro';
 
 // Props-оор ирж буй нийтлэлийн өгөгдөл (мөн Astro.url-ээс slug-ийг автоматаар салгаж авна)
 const props = Astro.props;
-const { title, description, pubDate, updatedDate, heroImage, tags,headings, readingTime } = props;
-console.log("Гарчгууд",headings)
+const { title, description, pubDate, updatedDate, heroImage, tags, headings, readingTime } = props;
+console.log("HeroImage",heroImage)
 // URL-ээс яг одоогийн нийтлэлийн slug-ийг олж авах (Жишээ нь: /blog/minii-niitlel/ -> minii-niitlel)
 const currentPath = Astro.url.pathname;
 const currentSlug = currentPath.split('/').filter(Boolean).pop();
@@ -92,6 +92,13 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
                     />
                 </div>
             )}
+			<!-- {heroImage && (
+				<img 
+					src={heroImage} 
+					alt="Blog hero image" 
+					class="rounded-xl w-full h-auto object-cover" 
+				/>
+			)} -->
             
             <!-- Гарчиг болон огноо -->
             <div class="text-center mb-8 pb-6 border-b border-slate-200">
