@@ -44,7 +44,7 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={title} description={description} image={heroImage} />
 		<link rel="icon" href="/favicon.ico" />
 		
 		<!-- Open Graph (Сошиал хуваалтын тохиргоо) -->
@@ -134,22 +134,26 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
             </div>
 
 			{headings && headings.length > 0 && (
-    <nav class="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-8">
-        <h2 class="text-lg font-bold text-slate-900 mb-4">Гарчиг</h2>
-		<!-- Огнооны хажууд эсвэл доор нь харуулах -->
-        <ul class="space-y-2 text-sm">
-            {headings.map((heading) => (
-                <li class={`list-none ${heading.depth === 3 ? 'pl-4' : ''}`}>
-                    <a 
-                        href={`#${heading.slug}`} 
-                        class="text-slate-600 hover:text-blue-600 transition-colors block"
-                    >
-                        {heading.text}
-                    </a>
-                </li>
-            ))}
-        </ul>
-    </nav>
+				<details class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
+					<summary class="font-bold cursor-pointer text-slate-700">Агуулгын хураангуй</summary>
+					<nav>
+						{/* <h2 class="text-lg font-bold text-slate-900 mb-4">Гарчиг</h2> */}
+						<!-- Огнооны хажууд эсвэл доор нь харуулах -->
+						<ul class="space-y-2 text-sm">
+							{headings.map((heading) => (
+								<li class={`list-none ${heading.depth === 3 ? 'pl-4' : ''}`}>
+									<a 
+										href={`#${heading.slug}`} 
+										class="text-slate-600 hover:text-blue-600 transition-colors block"
+									>
+										{heading.text}
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				</details>
+    
 )}
 
             <!-- Нийтлэлийн үндсэн контент (Markdown) -->
@@ -159,49 +163,49 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
         </article>
 
 		<!-- Сошиал хуваалцах хэсэг -->
-<div class="mt-12 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
-    <span class="text-sm font-semibold text-slate-700">Энэ нийтлэлийг хуваалцах:</span>
-    
-    <div class="flex items-center gap-3">
-        <!-- Facebook дээр хуваалцах -->
-        <a 
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
-        >
-            Facebook
-        </a>
+		<div class="mt-12 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
+			<span class="text-sm font-semibold text-slate-700">Энэ нийтлэлийг хуваалцах:</span>
+			
+			<div class="flex items-center gap-3">
+				<!-- Facebook дээр хуваалцах -->
+				<a 
+					href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} 
+					target="_blank" 
+					rel="noopener noreferrer"
+					class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
+				>
+					Facebook
+				</a>
 
-        <!-- X (Twitter) дээр хуваалцах -->
-        <a 
-            href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="bg-slate-100 text-slate-800 hover:bg-slate-200 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
-        >
-            X (Twitter)
-        </a>
+				<!-- X (Twitter) дээр хуваалцах -->
+				<a 
+					href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`} 
+					target="_blank" 
+					rel="noopener noreferrer"
+					class="bg-slate-100 text-slate-800 hover:bg-slate-200 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
+				>
+					X
+				</a>
 
-        <!-- LinkedIn дээр хуваалцах -->
-        <a 
-            href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
-        >
-            LinkedIn
-        </a>
+				<!-- LinkedIn дээр хуваалцах -->
+				<a 
+					href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`} 
+					target="_blank" 
+					rel="noopener noreferrer"
+					class="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
+				>
+					LinkedIn
+				</a>
 
-        <!-- Линк хуулж авах товч (JavaScript-тэй) -->
-        <button 
-            onclick={`navigator.clipboard.writeText('${currentUrl}'); alert('Линк хуулагдлаа!');`}
-            class="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer"
-        >
-            🔗 Линк хуулах
-        </button>
-    </div>
-</div>
+				<!-- Линк хуулж авах товч (JavaScript-тэй) -->
+				<button 
+					onclick={`navigator.clipboard.writeText('${currentUrl}'); alert('Линк хуулагдлаа!');`}
+					class="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer"
+				>
+					🔗 Хуулах
+				</button>
+			</div>
+		</div>
     </main>
 
     <!-- Баруун талд: Sidebar (PC дээр 1 багана эзэлнэ) -->
@@ -216,13 +220,13 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 		<!-- Нийтлэлийн дээр эсвэл доор буцах товч нэмэх нь -->
 		<div class="max-w-720px mx-auto px-4 pt-6">
 			<a href="/blog" class="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
-				← Буцах (Бүх нийтлэл)
+				← Буцах 
 			</a>
 		</div>
 		
 		<!-- 4. Дизайн хэсэг (Tailwind CSS ашигласан жишээ) -->
 {relatedPosts.length > 0 && (
-    <section class="max-w-720px mx-auto px-4 mt-16 pt-8 border-t border-slate-200">
+    <section class="max-w-720px mx-auto px-4 mt-16 pt-8 border-t border-slate-200 mb-8">
         <h3 class="text-xl font-bold text-slate-900 mb-6">Төстэй нийтлэлүүд</h3>
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
