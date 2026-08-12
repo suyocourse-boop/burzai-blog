@@ -9,6 +9,8 @@ import { getCollection } from 'astro:content';
 import Sidebar from '../components/Sidebar.astro';
 import CallToActionBanner from '../components/CallToActionBanner.astro'
 import FloatingBanner from '../components/FloatingBanner.astro'
+// import Image from 'astro/components/Image.astro';
+import ArticleSchema from '../components/ArticleSchema.astro';
 // Props-оор ирж буй нийтлэлийн өгөгдөл (мөн Astro.url-ээс slug-ийг автоматаар салгаж авна)
 const props = Astro.props;
 const { title, description, pubDate, updatedDate, heroImage, tags, headings, readingTime } = props;
@@ -63,6 +65,31 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 
 		<!-- Twitter/X хуваалтад зориулсан -->
 		<meta name="twitter:card" content="summary_large_image" />
+
+		<!-- ========================================== -->
+        <!-- ЭНД ARTICLE SCHEMA КОМПОНЕНТОО ЗУРАГТАЙ НЬ ХОЛБОЖ БАЙНА -->
+        <!-- ========================================== -->
+        {(() => {
+            const schemaImage = typeof heroImage === 'object' && heroImage !== null && 'src' in heroImage
+                ? (heroImage as { src: string }).src
+                : (heroImage || '/default-og-image.jpg');
+            
+            const absoluteImageUrl = new URL(schemaImage, Astro.url).href;
+
+            return (
+                <ArticleSchema 
+                    headline={title}
+                    description={description || title}
+                    image={absoluteImageUrl}
+                    datePublished={pubDate ? new Date(pubDate).toISOString() : new Date().toISOString()}
+                    dateModified={updatedDate ? new Date(updatedDate).toISOString() : (pubDate ? new Date(pubDate).toISOString() : new Date().toISOString())}
+                    authorName="Burzai Zar Admin"
+                    publisherName="Burzai Zar Blog"
+                    publisherLogo={new URL('/android-chrome-192x192.png', Astro.url).href}
+                    url={Astro.url.href}
+                />
+            );
+        })()}
    </head>
 
 	<body class="bg-white text-slate-900 antialiased flex flex-col min-h-screen">
@@ -187,7 +214,7 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 					rel="noopener noreferrer"
 					class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
 				>
-					Facebook
+					<Image src="/snsicons/facebook.svg" alt="facebook" width={20} height={20}/>
 				</a>
 
 				<!-- X (Twitter) дээр хуваалцах -->
@@ -197,7 +224,7 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 					rel="noopener noreferrer"
 					class="bg-slate-100 text-slate-800 hover:bg-slate-200 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
 				>
-					X
+					<Image src="/snsicons/x.svg" alt="x" width={16} height={16}/>
 				</a>
 
 				<!-- LinkedIn дээр хуваалцах -->
@@ -207,7 +234,7 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
 					rel="noopener noreferrer"
 					class="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
 				>
-					LinkedIn
+					<Image src="/snsicons/LinkedIn.webp" alt="LinkedIn" width={20} height={20}/>
 				</a>
 
 				<!-- Линк хуулж авах товч (JavaScript-тэй) -->

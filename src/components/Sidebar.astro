@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Search from './Search.astro';
+import CurrencyRate from './CurrencyRate.astro';
 
 const posts = await getCollection('blog');
 
@@ -42,4 +43,6 @@ const tags = [...new Set(posts.flatMap((p) => p.data.tags || []))];
             ))}
         </div>
     </section>
+
+   
 </aside>

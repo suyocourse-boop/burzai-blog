@@ -1,0 +1,55 @@
+---
+// src/components/ArticleSchema.astro
+interface Props {
+  headline: string;
+  description: string;
+  image: string;
+  datePublished: string;
+  dateModified?: string;
+  authorName: string;
+  publisherName: string;
+  publisherLogo: string;
+  url: string;
+}
+
+const {
+  headline,
+  description,
+  image,
+  datePublished,
+  dateModified = datePublished,
+  authorName,
+  publisherName,
+  publisherLogo,
+  url,
+} = Astro.props;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": headline,
+  "description": description,
+  "image": image,
+  "datePublished": datePublished,
+  "dateModified": dateModified,
+  "author": {
+    "@type": "Person",
+    "name": authorName
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": publisherName,
+    "logo": {
+      "@type": "ImageObject",
+      "url": publisherLogo
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage"
+  },
+  "url": url
+};
+---
+
+<!-- JSON-LD кодыг HTML-ийн head хэсэг рүү оруулна -->
+<script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
