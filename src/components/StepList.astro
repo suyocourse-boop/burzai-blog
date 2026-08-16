@@ -1,0 +1,51 @@
+---
+import StepCard from './StepCard.astro';
+
+export interface StepItem {
+  number: string;
+  title: string;
+  description: string;
+  image: string;
+}
+
+export interface Props {
+  steps: StepItem[];
+}
+
+const { steps } = Astro.props;
+---
+
+<!-- items-stretch болон gap-y-16 ашигласнаар картуудын өндөр тэгшигдэж, сум хоорондох зай хангалттай гарна -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-y-16 gap-x-6 my-8 relative rounded-2xl bg-gray-100 p-4 md:p-8 items-stretch">
+  {steps.map((step, index) => {
+    const isLast = index === steps.length - 1;
+    
+    return (
+      <div class="relative flex flex-col h-full">
+        {/* Картын компонент (h-full ашигласнаар өндөр нь автоматаар ижилхэн болно) */}
+        <div class="flex-1 flex flex-col">
+          <StepCard
+            number={step.number}
+            title={step.title}
+            description={step.description}
+            image={step.image}
+          />
+        </div>
+
+        {/* Дараагийн алхам руу заах суман холбоос */}
+        {!isLast && (
+          <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:-right-6 md:top-1/2 md:-translate-y-1/2 z-30 flex items-center justify-center w-10 h-10 bg-amber-500 text-white rounded-full shadow-lg border-2 border-white transition-transform hover:scale-110">
+            {/* Утасны дэлгэц дээр доошоо заана (↓) */}
+            <svg class="w-5 h-5 block md:hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+            {/* Компьютер дээр баруун тийш заана (→) */}
+            <svg class="w-5 h-5 hidden md:block" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </div>
+        )}
+      </div>
+    );
+  })}
+</div>
