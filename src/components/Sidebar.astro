@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Search from './Search.astro';
-import CurrencyRate from './CurrencyRate.astro';
+
 
 const posts = await getCollection('blog');
 
@@ -34,7 +34,7 @@ const tags = [...new Set(posts.flatMap((p) => p.data.tags || []))];
 
     <!-- Тагууд -->
     <section>
-        <h3 class="font-bold text-slate-900 mb-4 uppercase text-xs tracking-widest">Шошго (Tags)</h3>
+        <h3 class="font-bold text-slate-900 mb-4 uppercase text-xs tracking-widest">Шошго</h3>
         <div class="flex flex-wrap gap-2">
             {tags.map((tag) => (
                 <a href={`/blog/tags/${tag}`} class="bg-white border border-slate-200 px-3 py-1 rounded-full text-xs text-slate-600 hover:bg-blue-50 hover:border-blue-300 transition">
@@ -43,6 +43,75 @@ const tags = [...new Set(posts.flatMap((p) => p.data.tags || []))];
             ))}
         </div>
     </section>
+    <div class="burzai-secret-door-container">
+    <h3>⚠️ Анхаар!</h3>
+    <!-- onclick-ийн оронд шууд a tag ашиглах нь локал дээр алдаа гаргахгүй -->
+    <a href="https://framevr.io/burzai-frame#" target="_blank" class="secret-door-link">
+        <div class="secret-door">
+            <div class="door-sign">Орохыг хатуу хориглоно</div>
+            <div class="door-knob"></div>
+        </div>
+    </a>
+    <p class="door-text">Бэлтгэж байна та түр хүлээнэ үү...</p>
+</div>
 
+<style>
+.burzai-secret-door-container {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.secret-door-link {
+    text-decoration: none;
+    display: inline-block;
+}
+.secret-door {
+    position: relative;
+    width: 120px;
+    height: 180px;
+    background: #8B0000;
+    margin: 15px auto;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: inset -5px 0 15px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+.secret-door:hover {
+    transform: scale(1.05);
+}
+.door-sign {
+    position: absolute;
+    top: 30px;
+    left: 10px;
+    right: 10px;
+    background: #ffcc00;
+    color: #000;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px;
+    text-align: center;
+    border: 1px dashed #000;
+    transform: rotate(-3deg);
+}
+.door-knob {
+    position: absolute;
+    top: 90px;
+    right: 15px;
+    width: 12px;
+    height: 12px;
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+.door-text {
+    font-size: 13px;
+    color: #ccc;
+    margin-top: 5px;
+}
+</style>
    
 </aside>

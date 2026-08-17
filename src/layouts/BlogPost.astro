@@ -163,26 +163,25 @@ console.log("Олдсон төстэй нийтлэлүүд:", relatedPosts.leng
             </div>
 
 			{headings && headings.length > 0 && (
-				<details class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
-					<summary class="font-bold cursor-pointer text-slate-700">Агуулгын хураангуй</summary>
-					<nav>
-						{/* <h2 class="text-lg font-bold text-slate-900 mb-4">Гарчиг</h2> */}
-						<!-- Огнооны хажууд эсвэл доор нь харуулах -->
-						<ul class="space-y-2 text-sm">
-							{headings.map((heading) => (
-								<li class={`list-none ${heading.depth === 3 ? 'pl-4' : ''}`}>
-									<a 
-										href={`#${heading.slug}`} 
-										class="text-slate-600 hover:text-blue-600 transition-colors block"
-									>
-										{heading.text}
-									</a>
-								</li>
-							))}
-						</ul>
-					</nav>
-				</details>
-    
+    <details class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
+        <summary class="font-bold cursor-pointer text-slate-700">Агуулгын хураангуй</summary>
+        <nav>
+            <ul class="space-y-2 text-sm">
+                {headings
+                    .filter((heading) => heading.depth <= 2) // <-- Зөвхөн h1 болон h2 гарчигуудыг шүүж авна (h3 болон түүнээс доошийг хасна)
+                    .map((heading) => (
+                        <li class={`list-none ${heading.depth === 2 ? 'pl-4' : ''}`}>
+                            <a 
+                                href={`#${heading.slug}`} 
+                                class="text-slate-600 hover:text-blue-600 transition-colors block"
+                            >
+                                {heading.text}
+                            </a>
+                        </li>
+                    ))}
+            </ul>
+        </nav>
+    </details>
 )}
 
             <!-- Нийтлэлийн үндсэн контент (Markdown) -->
