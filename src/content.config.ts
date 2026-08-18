@@ -16,6 +16,8 @@ const blog = defineCollection({
 			heroImage: z.optional(image()),
 			tags: z.array(z.string()).optional(),
 			category: z.string().default("Бусад"),
+			primaryKeyword: z.string().optional(),
+            secondaryKeywords: z.array(z.string()).optional(),
 		}),
 });
 

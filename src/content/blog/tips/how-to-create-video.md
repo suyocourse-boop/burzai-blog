@@ -2,7 +2,7 @@
 title: "Үл хөдлөх хөрөнгийн зарын видео хэрхэн хийх вэ?"
 description: "Орон сууц, газар, хаус болон бусад үл хөдлөх хөрөнгийн зарын видеог утсаараа хэрхэн зөв хийхийг алхам алхмаар тайлбарлая. Зураг авалт, дараалал, текст, дуу болон видео оруулах зөвлөмж."
 pubDate: 2026-08-16
-heroImage: "../../../assets/blog-placeholder-2.jpg"
+heroImage: "https://ik.imagekit.io/vdhsykarl/Blog/property-video.webp"
 category: "Зөвлөгөө"
 tags: ["#ҮлХөдлөх"]
 ---

@@ -6,6 +6,7 @@ export interface StepItem {
   title: string;
   description: string;
   image: string;
+  badgeText: string;
 }
 
 export interface Props {
@@ -29,6 +30,7 @@ const { steps } = Astro.props;
             title={step.title}
             description={step.description}
             image={step.image}
+            badgeText={step.badgeText}
           />
         </div>
 
